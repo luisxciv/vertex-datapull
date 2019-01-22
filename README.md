@@ -24,3 +24,7 @@ report_date             created_date          lat             long
 We can identify the routes by the created_date column and calculate speeds and distances from each of the vertices inside each group.
 Using API's like Overpass and Here Maps we can also identify street names, speed_limits, street_types and other insightful data.
 
+I decided to iterate and do this process for every id in a list and insert the results back into a sql table.
+
+Script completed on 01/22/2019
+
