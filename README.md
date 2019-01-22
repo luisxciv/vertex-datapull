@@ -2,11 +2,14 @@
 
 
 #Summary 
-We have a Mysql table under the name of score, this holds information about user's travelling routes.
-The route is sent to the server once the device is unlocked and the coordinate pairs are picked up 
-individually by the device every 3 minutes. 
+I have a mysql table which holds information about user's travelling routes.
+A route is sent in an array to the server every time the device is unlocked and the coordinate pairs are picked up 
+individually by the device every 3 minutes(while locked)
 
-Using a sql query to select the timestamp when the location was picked up from the device, the time the group was sent to the server , lat and long we can group and order our data the following way: 
+The individually picked coord-pairs (AKA the vertices) are stored as ```report_dates``` and the array of a travel route 
+is stored as ```created_date```
+
+Using a sql group function I can order the data in such fashion as: 
 ```
 report_date             created_date          lat             long    
 '2018-07-23 12:50:17','2018-07-23 13:24:07','20.61172005','-100.40829606'
@@ -21,8 +24,10 @@ report_date             created_date          lat             long
 '2018-07-23 16:55:29','2018-07-23 16:59:29','20.56269359','-100.41385984'
 
  ```
-We can identify the routes by the created_date column and calculate speeds and distances from each of the vertices inside each group.
-Using API's like Overpass and Here Maps we can also identify street names, speed_limits, street_types and other insightful data.
+I can identify a total of 3 routes by grouping the ```created_date``` column and calculate speed on every group's vertices using  ```v=d/t```. We can also filter out 
+repeated/null information from within Mysql or pandas.
+
+Calling API's like Overpass and HereMaps can also help us identify street names, speed_limits, street_types and other insightful data.
 
 I decided to iterate and do this process for every id in a list and insert the results back into a sql table.
 
@@ -34,4 +39,4 @@ import pandas as pd
 import pymysql.cursors
 import numpy as np
 import requests
-
+```
