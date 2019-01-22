@@ -2,13 +2,14 @@ import pandas as pd
 import pymysql.cursors
 import numpy as np
 import requests
-import json
 
+#Colours for our console
 class Colour:
    RED = '\033[91m'
    END = '\033[0m'
    GREEN = '\033[92m'
 
+#Here maps keys
 app_id = ''
 app_code = ''
 
@@ -43,6 +44,7 @@ def haversine(lon1, lat1, lon2, lat2):
     return c * r_e
 
 def get_unixtime(dt641, dt642):
+    # calculate time diff between to timestamps
     unix1 = dt641.astype('datetime64[s]').astype('int')
     unix2 = dt642.astype('datetime64[s]').astype('int')
     difference = unix2 - unix1
@@ -146,12 +148,16 @@ for id in users:
                  distance, highway, lanes, light, oneway, sidewalk, surface, street_width) VALUES (%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s)""",
                                 (mobile_user_id, created_date, street, sublocality, postalCode, city, stateCode, countryCode, speed, maxspeed, respect, distance, highway, lanes
                                  , lit, oneway, sidewalk, surface, street_width))
+                #Commit for every row in the pandas df
                 rdsConn.commit()
                 print("Successfully inserted tracking data for user: " + Colour.GREEN + str(mobile_user_id) + Colour.END)
             else:
                 print("Incomplete data")
     except:
         pass
+    # Currently not doing error handling but you can easily print e to know what's going on
+
+rdsConn.close()
 
 
 
