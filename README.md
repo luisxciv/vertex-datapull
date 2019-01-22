@@ -28,3 +28,10 @@ I decided to iterate and do this process for every id in a list and insert the r
 
 Script completed on 01/22/2019
 
+Libraries required: 
+```
+import pandas as pd
+import pymysql.cursors
+import numpy as np
+import requests
+
