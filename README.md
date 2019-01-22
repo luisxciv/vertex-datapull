@@ -1,8 +1,6 @@
 # vertex-datapull
 
-
-#Summary 
-I have a mysql table which holds information about user's travelling routes.
+the score table holds information about users travelling routes.
 A route is sent in an array to the server every time the device is unlocked and the coordinate pairs are picked up 
 individually by the device every 3 minutes(while locked)
 
