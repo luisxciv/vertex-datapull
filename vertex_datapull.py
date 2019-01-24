@@ -15,7 +15,7 @@ app_code = ''
 #Mysql connection details
 rdsConn = pymysql.connect(host = '',
                           db = '',
-                          user = 'root',
+                          user = '',
                           password = '',
                           charset = 'utf8mb4',
                           cursorclass=pymysql.cursors.DictCursor)
@@ -124,29 +124,31 @@ for id in users:
 
                 for line in data2['elements']:
                     try:
-                        maxspeed = line['tags']['maxspeed']
+                        maxspeed = int(line['tags']['maxspeed'])
                         surface = line['tags']['surface']
                         highway = line['tags']['highway']
-                        lanes = line['tags']['lanes']
+                        lanes = int(line['tags']['lanes'])
                         lit = line['tags']['lit']
                         sidewalk = line['tags']['sidewalk']
                         width = line['tags']['width']
                         oneway = line['tags']['oneway']
                         street_width = line['tags']['street_width']
 
-                        if int(maxspeed) > speed:
-                            respect = 1
-                        else:
-                            respect = 0
-                        if lit is 'yes':
-                            lit = 1
-                        if lit is 'no':
-                            lit = 0
-
                     except:
                         pass
             except:
                 pass
+
+            if maxspeed > speed:
+                respect = 1
+            if maxspeed < speed:
+                respect = 0
+
+            if lit is 'yes':
+                lit = 1
+            if lit is 'no':
+                lit = 0
+
             print(mobile_user_id, created_date, street, sublocality, postalCode, city, stateCode, countryCode, speed, maxspeed, respect, distance, highway, lanes
                                  , lit, oneway, sidewalk, surface, street_width)
             if street != None:
