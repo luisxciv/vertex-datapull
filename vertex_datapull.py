@@ -3,7 +3,6 @@ import pymysql.cursors
 import numpy as np
 import requests
 
-#Colours for our console
 class Colour:
    RED = '\033[91m'
    END = '\033[0m'
@@ -16,7 +15,7 @@ app_code = ''
 #Mysql connection details
 rdsConn = pymysql.connect(host = '',
                           db = '',
-                          user = '',
+                          user = 'root',
                           password = '',
                           charset = 'utf8mb4',
                           cursorclass=pymysql.cursors.DictCursor)
@@ -94,7 +93,7 @@ for id in users:
             created_date = str(row['created_date'])
 
             response = requests.get('https://places.api.here.com/places/v1/discover/here?at='+ str(lat) + '%2C'+ str(lon) + '&size=1' + '&app_id=' + app_id + '&app_code=' + app_code)
-            response2 = requests.get('https://overpass-api.de/api/interpreter?data=[out:json][timeout:25];(way(around:10,' + str(lat) + ',' + str(lon) + ')["maxspeed"];);(._;>;);out;')
+            response2 = requests.get('https://overpass-api.de/api/interpreter?data=[out:json][timeout:25];(way(around:100,' + str(lat) + ',' + str(lon) + ')["maxspeed"];);(._;>;);out;')
             data = response.json()
             data2 = response2.json()
 
@@ -134,16 +133,23 @@ for id in users:
                         width = line['tags']['width']
                         oneway = line['tags']['oneway']
                         street_width = line['tags']['street_width']
-                        if maxspeed > speed:
+
+                        if int(maxspeed) > speed:
                             respect = 1
                         else:
                             respect = 0
+                        if lit is 'yes':
+                            lit = 1
+                        if lit is 'no':
+                            lit = 0
+
                     except:
                         pass
             except:
                 pass
+            print(mobile_user_id, created_date, street, sublocality, postalCode, city, stateCode, countryCode, speed, maxspeed, respect, distance, highway, lanes
+                                 , lit, oneway, sidewalk, surface, street_width)
             if street != None:
-                print(mobile_user_id, created_date)
                 cursor2.execute("""INSERT INTO driver_tracking (mobile_user_id, created_date, street, sublocality, postal_code, city, state, country, speed, speed_limit, respect_limit,
                  distance, highway, lanes, light, oneway, sidewalk, surface, street_width) VALUES (%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s, %s,%s)""",
                                 (mobile_user_id, created_date, street, sublocality, postalCode, city, stateCode, countryCode, speed, maxspeed, respect, distance, highway, lanes
