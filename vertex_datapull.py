@@ -2,6 +2,9 @@ import pandas as pd
 import pymysql.cursors
 import numpy as np
 import requests
+import paramiko
+from os.path import expanduser
+from sshtunnel import SSHTunnelForwarder
 
 class Colour:
    RED = '\033[91m'
@@ -9,16 +12,27 @@ class Colour:
    GREEN = '\033[92m'
 
 #Here maps keys
+#Here maps keys
 app_id = ''
 app_code = ''
 
 #Mysql connection details
-rdsConn = pymysql.connect(host = '',
-                          db = '',
-                          user = '',
-                          password = '',
-                          charset = 'utf8mb4',
-                          cursorclass=pymysql.cursors.DictCursor)
+pkeyfilepath = ''
+home = expanduser('~')
+mypkey = paramiko.RSAKey.from_private_key_file(home + pkeyfilepath)
+
+with SSHTunnelForwarder(
+        ('', 22),
+    ssh_username='',
+    ssh_pkey=mypkey,
+    remote_bind_address=('', 3306)) as tunnel:
+    rdsConn = pymysql.connect(host='',
+                              db='',
+                              user='',
+                              password='',
+                              port=tunnel.local_bind_port,
+                              charset='',
+                              cursorclass=pymysql.cursors.DictCursor)
 
 #Some visualization options for our console
 desired_width=320
